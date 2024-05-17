@@ -9,13 +9,15 @@ jobs:
     environment: test
 
     steps:
+      uses: actions/checkout@v4
+
       - name: Print envs
-        uses: actions/checkout@v4
         env:
           GRPC_DASHBOARDS_PUBLIC_HOST: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
         run: |- 
           variable_escaped='${{ '\${{ *env.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}'
           ls
+          cat public_api_config.yml
           sed -i '' -e  "s@$variable_escaped@$GRPC_DASHBOARDS_PUBLIC_HOST@g" public_api_config.yml
           ls
           cat public_api_config.yml
