@@ -12,7 +12,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Print envs
+        env:
+          GRPC_DASHBOARDS_PUBLIC_HOST: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
         run: |- 
-          echo "${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}"
-          echo "${{ secrets.GRPC_DASHBOARDS_PUBLIC_PORT }}"
-          env
+          value_escaped="${GRPC_DASHBOARDS_PUBLIC_HOST//\//\\\/}"
+          value_escaped="${value_escaped//\./\\\.}"
+          variable_escaped=${{ '\${{ *env.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}
+          sed -i '' -e  's/$variable_escaped/value_escaped/g' public_api_config.yml
+          cat public_api_config.yml
