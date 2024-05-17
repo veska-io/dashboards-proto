@@ -14,10 +14,6 @@ jobs:
       - name: Print envs
         env:
           GRPC_DASHBOARDS_PUBLIC_HOST: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
-          GRPC_DASHBOARDS_PUBLIC_HOS: ${{ vars.GRPC_DASHBOARDS_PUBLIC_HOST }}
         run: |- 
           variable_escaped='${{ '\${{ *secrets.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}'
-          echo $GRPC_DASHBOARDS_PUBLIC_HOST
-          echo $GRPC_DASHBOARDS_PUBLIC_HOS
           sed -i -e  "s@$variable_escaped@$GRPC_DASHBOARDS_PUBLIC_HOST@g" public_api_config.yml
-          cat public_api_config.yml
