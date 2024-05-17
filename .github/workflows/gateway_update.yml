@@ -18,5 +18,6 @@ jobs:
         run: |- 
           variable_escaped='${{ '\${{ *secrets.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}'
           echo $GRPC_DASHBOARDS_PUBLIC_HOST
+          echo $GRPC_DASHBOARDS_PUBLIC_HOS
           sed -i -e  "s@$variable_escaped@$GRPC_DASHBOARDS_PUBLIC_HOST@g" public_api_config.yml
           cat public_api_config.yml
