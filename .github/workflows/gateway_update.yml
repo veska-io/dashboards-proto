@@ -11,4 +11,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Print envs
-        run: echo "${{ env.GRPC_DASHBOARDS_PUBLIC_HOST }}"
+        run: |- 
+          echo "${{ env.GRPC_DASHBOARDS_PUBLIC_HOST }}"
+          echo "${{ vars.GRPC_DASHBOARDS_PUBLIC_PORT }}"
