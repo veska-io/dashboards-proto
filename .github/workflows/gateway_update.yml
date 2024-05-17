@@ -18,5 +18,5 @@ jobs:
           value_escaped="${GRPC_DASHBOARDS_PUBLIC_HOST//\//\\\/}"
           value_escaped="${value_escaped//\./\\\.}"
           variable_escaped=${{ '\${{ *env.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}
-          sed -i '' -e  's/$variable_escaped/value_escaped/g' public_api_config.yml
+          sed -i '' -e  's/$variable_escaped/$value_escaped/g' public_api_config.yml
           cat public_api_config.yml
