@@ -13,6 +13,6 @@ jobs:
 
       - name: Print envs
         run: |- 
-          echo "${{ secret.GRPC_DASHBOARDS_PUBLIC_HOST }}"
-          echo "${{ secret.GRPC_DASHBOARDS_PUBLIC_PORT }}"
+          echo "${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}"
+          echo "${{ secrets.GRPC_DASHBOARDS_PUBLIC_PORT }}"
           env
