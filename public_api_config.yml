@@ -1,0 +1,38 @@
+type: google.api.Service
+config_version: 3
+
+name: "*.apigateway.dashboards.public"
+
+title: API Dashboards Public
+apis:
+- name: public.Dashboards
+usage:
+  rules:
+  - selector: "*"
+    allow_unregistered_calls: true
+backend:
+  rules:
+    - selector: "*"
+      address: ${{ env.GRPC_DASHBOARDS_PUBLIC_HOST }}
+http:
+  rules:
+    - selector: public.Dashboards.Status
+      get: /v1/dashboards
+
+    - selector: public.Dashboards.GetFunding
+      get: /v1/dashboards/funding
+    - selector: public.Dashboards.GetPriceCandles
+      get: /v1/dashboards/price-candles
+    - selector: public.Dashboards.GetOpenInterest
+      get: /v1/dashboards/open-interest
+    - selector: public.Dashboards.GetLiquidations
+      get: /v1/dashboards/liquidations
+
+    - selector: public.Dashboards.GetPriceDiff
+      get: /v1/dashboards/price-diff
+    - selector: public.Dashboards.GetOpenInterestDiff
+      get: /v1/dashboards/open-interest-diff
+    - selector: public.Dashboards.GetVolumeUsdDiff
+      get: /v1/dashboards/volume-usd-diff
+    - selector: public.Dashboards.GetVolumeTokenDiff
+      get: /v1/dashboards/volume-token-diff

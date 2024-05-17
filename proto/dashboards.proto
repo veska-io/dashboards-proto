@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package public;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/veska-io/proto-dashboards-public;dpgen";
+
+service Dashboards {
+	rpc Status(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+
+	rpc GetFunding(BasicRequest) returns (BasicResponse) {}
+	rpc GetPriceCandles(BasicRequest) returns (BasicResponse) {}
+	rpc GetOpenInterest(BasicRequest) returns (BasicResponse) {}
+	rpc GetLiquidations(BasicRequest) returns (BasicResponse) {}
+
+	rpc GetPriceDiff(BasicRequest) returns (BasicResponse) {}
+	rpc GetOpenInterestDiff(BasicRequest) returns (BasicResponse) {}
+	rpc GetVolumeUsdDiff(BasicRequest) returns (BasicResponse) {}
+	rpc GetVolumeTokenDiff(BasicRequest) returns (BasicResponse) {}
+}
+
+message BasicRequest {
+	repeated Exchange exchanges = 1;
+	repeated string markets = 2;
+	int64 start = 3;
+	int64 end = 4;
+	int32 window_size = 5;
+	optional string granularity = 6;
+}
+
+message BasicResponse {
+	repeated Point points = 1;
+}
+
+message Point {
+	int64 timestamp = 1;
+	Exchange exchange = 2;
+	string market = 3;
+	double value = 4;
+}
+
+enum Exchange {
+	ALL = 0;
+	BINANCE = 1;
+	BYBIT = 2;
+	DYDX_V3 = 3;
+	DYDX_V4 = 4;
+}
