@@ -13,7 +13,7 @@ usage:
 backend:
   rules:
     - selector: "*"
-      address: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
+      address: ${{ vars.GRPC_DASHBOARDS_PUBLIC_HOST }}
 http:
   rules:
     - selector: public.Dashboards.Status
