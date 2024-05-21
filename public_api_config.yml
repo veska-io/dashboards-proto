@@ -13,11 +13,15 @@ usage:
 backend:
   rules:
     - selector: "*"
-      address: ${{ env.GRPC_DASHBOARDS_PUBLIC_HOST }}
+      address: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
 http:
   rules:
     - selector: public.Dashboards.Status
       get: /v1/dashboards
+    - selector: public.Dashboards.GetExchanges
+      get: /v1/dashboards/exchanges
+    - selector: public.Dashboards.GetMarkets
+      get: /v1/dashboards/markets
 
     - selector: public.Dashboards.GetFunding
       get: /v1/dashboards/funding

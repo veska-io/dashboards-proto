@@ -8,6 +8,8 @@ option go_package = "github.com/veska-io/proto-dashboards-public;dpgen";
 
 service Dashboards {
 	rpc Status(google.protobuf.Empty) returns (google.protobuf.Empty) {}
+	rpc GetExchanges(google.protobuf.Empty) returns (ExchangesResponse) {}
+	rpc GetMarkets(MarketsRequest) returns (MarketsResponse) {}
 
 	rpc GetFunding(BasicRequest) returns (BasicResponse) {}
 	rpc GetPriceCandles(BasicRequest) returns (BasicResponse) {}
@@ -21,7 +23,7 @@ service Dashboards {
 }
 
 message BasicRequest {
-	repeated Exchange exchanges = 1;
+	repeated string exchanges = 1;
 	repeated string markets = 2;
 	int64 start = 3;
 	int64 end = 4;
@@ -35,15 +37,19 @@ message BasicResponse {
 
 message Point {
 	int64 timestamp = 1;
-	Exchange exchange = 2;
+	string exchange = 2;
 	string market = 3;
 	double value = 4;
 }
 
-enum Exchange {
-	ALL = 0;
-	BINANCE = 1;
-	BYBIT = 2;
-	DYDX_V3 = 3;
-	DYDX_V4 = 4;
+message ExchangesResponse {
+	repeated string exchanges = 1;
+}
+
+message MarketsRequest {
+	repeated string exchanges = 1;
+}
+
+message MarketsResponse {
+	repeated string markets = 1;
 }
