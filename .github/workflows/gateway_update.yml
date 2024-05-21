@@ -6,14 +6,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: test
+    environment: ${{ github.ref == 'refs/heads/main' && 'main' || 'test' }}
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.*'
 
-      - name: Print envs
+      - name: Prepare API config
         env:
-          GRPC_DASHBOARDS_PUBLIC_HOST: ${{ vars.GRPC_DASHBOARDS_PUBLIC_HOST }}
+          GRPC_DASHBOARDS_PUBLIC_HOST: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
         run: |- 
-          variable_escaped='${{ '\${{ *vars.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}'
+          variable_escaped='${{ '\${{ *secrets.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}'
           sed -i -e  "s@$variable_escaped@$GRPC_DASHBOARDS_PUBLIC_HOST@g" public_api_config.yml
+          cp -r proto deploy_api
+          make
+          cp gen/go/dashboards/api_descriptor.pb deploy_api/api_descriptor.pb
+          
