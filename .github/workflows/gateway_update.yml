@@ -17,9 +17,6 @@ jobs:
           token_format: 'access_token'
           workload_identity_provider: '${{ secrets.DEPLOY_WID }}'
           service_account: '${{ secrets.DEPLOY_SERVICE_ACCOUNT }}'
-      - uses: actions/setup-go@v5
-        with:
-          go-version: '1.22.*'
       - name: Prepare API config
         env:
           GRPC_DASHBOARDS_PUBLIC_HOST: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
