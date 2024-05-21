@@ -9,7 +9,7 @@ option go_package = "github.com/veska-io/proto-dashboards-public;dpgen";
 service Dashboards {
 	rpc Status(google.protobuf.Empty) returns (google.protobuf.Empty) {}
 	rpc GetExchanges(google.protobuf.Empty) returns (ExchangesResponse) {}
-	rpc GetMarkets(MarketsRequest) returns (MarketsResponse) {}
+	rpc GetMarkets(BasicRequest) returns (MarketsResponse) {}
 
 	rpc GetFunding(BasicRequest) returns (BasicResponse) {}
 	rpc GetPriceCandles(BasicRequest) returns (BasicResponse) {}
@@ -43,10 +43,6 @@ message Point {
 }
 
 message ExchangesResponse {
-	repeated string exchanges = 1;
-}
-
-message MarketsRequest {
 	repeated string exchanges = 1;
 }
 
