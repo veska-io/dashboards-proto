@@ -10,10 +10,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - name: Docker Auth
+          id: docker-auth
+          uses: 'docker/login-action@v3'
+          with:
+            username: 'oauth2accesstoken'
+            password: '${{ steps.auth.outputs.access_token }}'
+            registry: '${{ secrets.ARTIFACT_REGISTRY }}' 
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22.*'
-
       - name: Prepare API config
         env:
           GRPC_DASHBOARDS_PUBLIC_HOST: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
@@ -23,4 +29,3 @@ jobs:
           cp -r proto deploy_api
           make
           cp gen/go/dashboards/api_descriptor.pb deploy_api/api_descriptor.pb
-          
