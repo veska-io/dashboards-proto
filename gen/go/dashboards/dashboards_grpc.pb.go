@@ -24,6 +24,8 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DashboardsClient interface {
 	Status(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetExchanges(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ExchangesResponse, error)
+	GetMarkets(ctx context.Context, in *MarketsRequest, opts ...grpc.CallOption) (*MarketsResponse, error)
 	GetFunding(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
 	GetPriceCandles(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
 	GetOpenInterest(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
@@ -45,6 +47,24 @@ func NewDashboardsClient(cc grpc.ClientConnInterface) DashboardsClient {
 func (c *dashboardsClient) Status(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/public.Dashboards/Status", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardsClient) GetExchanges(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ExchangesResponse, error) {
+	out := new(ExchangesResponse)
+	err := c.cc.Invoke(ctx, "/public.Dashboards/GetExchanges", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dashboardsClient) GetMarkets(ctx context.Context, in *MarketsRequest, opts ...grpc.CallOption) (*MarketsResponse, error) {
+	out := new(MarketsResponse)
+	err := c.cc.Invoke(ctx, "/public.Dashboards/GetMarkets", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -128,6 +148,8 @@ func (c *dashboardsClient) GetVolumeTokenDiff(ctx context.Context, in *BasicRequ
 // for forward compatibility
 type DashboardsServer interface {
 	Status(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	GetExchanges(context.Context, *emptypb.Empty) (*ExchangesResponse, error)
+	GetMarkets(context.Context, *MarketsRequest) (*MarketsResponse, error)
 	GetFunding(context.Context, *BasicRequest) (*BasicResponse, error)
 	GetPriceCandles(context.Context, *BasicRequest) (*BasicResponse, error)
 	GetOpenInterest(context.Context, *BasicRequest) (*BasicResponse, error)
@@ -145,6 +167,12 @@ type UnimplementedDashboardsServer struct {
 
 func (UnimplementedDashboardsServer) Status(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Status not implemented")
+}
+func (UnimplementedDashboardsServer) GetExchanges(context.Context, *emptypb.Empty) (*ExchangesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetExchanges not implemented")
+}
+func (UnimplementedDashboardsServer) GetMarkets(context.Context, *MarketsRequest) (*MarketsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMarkets not implemented")
 }
 func (UnimplementedDashboardsServer) GetFunding(context.Context, *BasicRequest) (*BasicResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFunding not implemented")
@@ -197,6 +225,42 @@ func _Dashboards_Status_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DashboardsServer).Status(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Dashboards_GetExchanges_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardsServer).GetExchanges(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/public.Dashboards/GetExchanges",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardsServer).GetExchanges(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Dashboards_GetMarkets_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MarketsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DashboardsServer).GetMarkets(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/public.Dashboards/GetMarkets",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DashboardsServer).GetMarkets(ctx, req.(*MarketsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -355,6 +419,14 @@ var Dashboards_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Status",
 			Handler:    _Dashboards_Status_Handler,
+		},
+		{
+			MethodName: "GetExchanges",
+			Handler:    _Dashboards_GetExchanges_Handler,
+		},
+		{
+			MethodName: "GetMarkets",
+			Handler:    _Dashboards_GetMarkets_Handler,
 		},
 		{
 			MethodName: "GetFunding",
