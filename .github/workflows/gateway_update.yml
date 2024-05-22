@@ -7,6 +7,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ github.ref == 'refs/heads/main' && 'main' || 'test' }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     steps:
       - uses: actions/checkout@v4
@@ -17,10 +20,19 @@ jobs:
         env:
           GRPC_DASHBOARDS_PUBLIC_HOST: ${{ secrets.GRPC_DASHBOARDS_PUBLIC_HOST }}
         run: |- 
+          cp -r proto deploy_api
+
           variable_escaped='${{ '\${{ *secrets.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}'
           sed -i -e  "s@$variable_escaped@$GRPC_DASHBOARDS_PUBLIC_HOST@g" public_api_config.yml
-          cp -r proto deploy_api
+          cp public_api_config.yml deploy_api/public_api_config.yaml
+
+          sudo apt install -y protobuf-compiler
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+          export PATH="$PATH:$(go env GOPATH)/bin"
+
           make
+
           cp gen/go/dashboards/api_descriptor.pb deploy_api/api_descriptor.pb
       - name: Google Auth
         id: auth
@@ -32,8 +44,10 @@ jobs:
       - name: Update API Gateway
         run: |-
           cd deploy_api
-          gcloud api-gateway api-configs create dashboards-public-config-${{ github.sha }} \
+          sha_short=$(git rev-parse --short HEAD)
+          gcloud api-gateway api-configs create "dashboards-public-config-$sha_short" \
             --api=dashboards-public-api --project=${{ secrets.GCP_PROJECT }} \
             --grpc-files=api_descriptor.pb,public_api_config.yaml
           gcloud api-gateway gateways update dashboards-public-gateway \
-            --api=dashboards-public-api --api-config=dashboards-public-config-${{ github.sha }}
+            --api=dashboards-public-api --api-config="dashboards-public-config-$sha_short" \
+            --location=${{ secrets.API_GATEWAY_LOCATION }}
