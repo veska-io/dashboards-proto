@@ -6,4 +6,5 @@ grpc-with-descriptors:
 			--go-grpc_opt=paths=source_relative \
 			--descriptor_set_out=gen/go/dashboards/api_descriptor.pb \
 			--include_imports \
-			--include_source_info
+			--include_source_info \
+			--experimental_allow_proto3_optional
