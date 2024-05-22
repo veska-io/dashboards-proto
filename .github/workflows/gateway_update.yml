@@ -44,8 +44,9 @@ jobs:
       - name: Update API Gateway
         run: |-
           cd deploy_api
-          gcloud api-gateway api-configs create dashboards-public-config-${{ github.sha }} \
+          sha_short=$(git rev-parse --short HEAD)
+          gcloud api-gateway api-configs create "dashboards-public-config-$sha_short" \
             --api=dashboards-public-api --project=${{ secrets.GCP_PROJECT }} \
             --grpc-files=api_descriptor.pb,public_api_config.yaml
           gcloud api-gateway gateways update dashboards-public-gateway \
-            --api=dashboards-public-api --api-config=dashboards-public-config-${{ github.sha }}
+            --api=dashboards-public-api --api-config="dashboards-public-config-$sha_short"
