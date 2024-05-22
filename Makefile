@@ -8,7 +8,7 @@ grpc-with-descriptors:
 			--include_imports \
 			--include_source_info
 grpc-with-descriptors-github:
-	protoc -I proto proto/dashboards.proto \
+	protoc -I proto dashboards.proto \
 			--go_out=. \
 			--go_opt=paths=source_relative \
 			--go-grpc_out=. \
