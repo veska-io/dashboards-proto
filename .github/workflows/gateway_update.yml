@@ -20,6 +20,9 @@ jobs:
           variable_escaped='${{ '\${{ *secrets.GRPC_DASHBOARDS_PUBLIC_HOST *}}' }}'
           sed -i -e  "s@$variable_escaped@$GRPC_DASHBOARDS_PUBLIC_HOST@g" public_api_config.yml
           cp -r proto deploy_api
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28
+          go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2
+          export PATH="$PATH:$(go env GOPATH)/bin"
           make
           cp gen/go/dashboards/api_descriptor.pb deploy_api/api_descriptor.pb
       - name: Google Auth
