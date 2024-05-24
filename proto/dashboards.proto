@@ -28,7 +28,8 @@ message BasicRequest {
 	int64 start = 3;
 	int64 end = 4;
 	int32 window_size = 5;
-	optional string granularity = 6;
+	optional string window_unit = 6;
+	optional string granularity = 7;
 }
 
 message BasicResponse {
