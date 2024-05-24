@@ -27,7 +27,6 @@ message BasicRequest {
 	int64 end = 4;
 	int32 window_size = 5;
 	optional WindowUnit window_unit = 6;
-	optional string granularity = 7;
 }
 message BasicResponse {
 	repeated Point points = 1;
