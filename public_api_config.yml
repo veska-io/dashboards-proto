@@ -25,18 +25,14 @@ http:
 
     - selector: public.Dashboards.GetFunding
       get: /v1/dashboards/funding
-    - selector: public.Dashboards.GetPriceCandles
-      get: /v1/dashboards/price-candles
+    - selector: public.Dashboards.GetOhlcv
+      get: /v1/dashboards/ohlcv
     - selector: public.Dashboards.GetOpenInterest
       get: /v1/dashboards/open-interest
     - selector: public.Dashboards.GetLiquidations
       get: /v1/dashboards/liquidations
 
-    - selector: public.Dashboards.GetPriceDiff
-      get: /v1/dashboards/price-diff
+    - selector: public.Dashboards.GetOhlcvDiff
+      get: /v1/dashboards/ohlcv-diff
     - selector: public.Dashboards.GetOpenInterestDiff
       get: /v1/dashboards/open-interest-diff
-    - selector: public.Dashboards.GetVolumeUsdDiff
-      get: /v1/dashboards/volume-usd-diff
-    - selector: public.Dashboards.GetVolumeTokenDiff
-      get: /v1/dashboards/volume-token-diff
