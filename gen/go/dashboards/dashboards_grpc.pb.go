@@ -27,13 +27,11 @@ type DashboardsClient interface {
 	GetExchanges(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ExchangesResponse, error)
 	GetMarkets(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*MarketsResponse, error)
 	GetFunding(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
-	GetPriceCandles(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
+	GetOhlcv(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*OhlcvResponse, error)
 	GetOpenInterest(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
 	GetLiquidations(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
-	GetPriceDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
+	GetOhlcvDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*OhlcvDiffResponse, error)
 	GetOpenInterestDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
-	GetVolumeUsdDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
-	GetVolumeTokenDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error)
 }
 
 type dashboardsClient struct {
@@ -80,9 +78,9 @@ func (c *dashboardsClient) GetFunding(ctx context.Context, in *BasicRequest, opt
 	return out, nil
 }
 
-func (c *dashboardsClient) GetPriceCandles(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error) {
-	out := new(BasicResponse)
-	err := c.cc.Invoke(ctx, "/public.Dashboards/GetPriceCandles", in, out, opts...)
+func (c *dashboardsClient) GetOhlcv(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*OhlcvResponse, error) {
+	out := new(OhlcvResponse)
+	err := c.cc.Invoke(ctx, "/public.Dashboards/GetOhlcv", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,9 +105,9 @@ func (c *dashboardsClient) GetLiquidations(ctx context.Context, in *BasicRequest
 	return out, nil
 }
 
-func (c *dashboardsClient) GetPriceDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error) {
-	out := new(BasicResponse)
-	err := c.cc.Invoke(ctx, "/public.Dashboards/GetPriceDiff", in, out, opts...)
+func (c *dashboardsClient) GetOhlcvDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*OhlcvDiffResponse, error) {
+	out := new(OhlcvDiffResponse)
+	err := c.cc.Invoke(ctx, "/public.Dashboards/GetOhlcvDiff", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -125,24 +123,6 @@ func (c *dashboardsClient) GetOpenInterestDiff(ctx context.Context, in *BasicReq
 	return out, nil
 }
 
-func (c *dashboardsClient) GetVolumeUsdDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error) {
-	out := new(BasicResponse)
-	err := c.cc.Invoke(ctx, "/public.Dashboards/GetVolumeUsdDiff", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dashboardsClient) GetVolumeTokenDiff(ctx context.Context, in *BasicRequest, opts ...grpc.CallOption) (*BasicResponse, error) {
-	out := new(BasicResponse)
-	err := c.cc.Invoke(ctx, "/public.Dashboards/GetVolumeTokenDiff", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // DashboardsServer is the server API for Dashboards service.
 // All implementations must embed UnimplementedDashboardsServer
 // for forward compatibility
@@ -151,13 +131,11 @@ type DashboardsServer interface {
 	GetExchanges(context.Context, *emptypb.Empty) (*ExchangesResponse, error)
 	GetMarkets(context.Context, *BasicRequest) (*MarketsResponse, error)
 	GetFunding(context.Context, *BasicRequest) (*BasicResponse, error)
-	GetPriceCandles(context.Context, *BasicRequest) (*BasicResponse, error)
+	GetOhlcv(context.Context, *BasicRequest) (*OhlcvResponse, error)
 	GetOpenInterest(context.Context, *BasicRequest) (*BasicResponse, error)
 	GetLiquidations(context.Context, *BasicRequest) (*BasicResponse, error)
-	GetPriceDiff(context.Context, *BasicRequest) (*BasicResponse, error)
+	GetOhlcvDiff(context.Context, *BasicRequest) (*OhlcvDiffResponse, error)
 	GetOpenInterestDiff(context.Context, *BasicRequest) (*BasicResponse, error)
-	GetVolumeUsdDiff(context.Context, *BasicRequest) (*BasicResponse, error)
-	GetVolumeTokenDiff(context.Context, *BasicRequest) (*BasicResponse, error)
 	mustEmbedUnimplementedDashboardsServer()
 }
 
@@ -177,8 +155,8 @@ func (UnimplementedDashboardsServer) GetMarkets(context.Context, *BasicRequest) 
 func (UnimplementedDashboardsServer) GetFunding(context.Context, *BasicRequest) (*BasicResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFunding not implemented")
 }
-func (UnimplementedDashboardsServer) GetPriceCandles(context.Context, *BasicRequest) (*BasicResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPriceCandles not implemented")
+func (UnimplementedDashboardsServer) GetOhlcv(context.Context, *BasicRequest) (*OhlcvResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOhlcv not implemented")
 }
 func (UnimplementedDashboardsServer) GetOpenInterest(context.Context, *BasicRequest) (*BasicResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOpenInterest not implemented")
@@ -186,17 +164,11 @@ func (UnimplementedDashboardsServer) GetOpenInterest(context.Context, *BasicRequ
 func (UnimplementedDashboardsServer) GetLiquidations(context.Context, *BasicRequest) (*BasicResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetLiquidations not implemented")
 }
-func (UnimplementedDashboardsServer) GetPriceDiff(context.Context, *BasicRequest) (*BasicResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPriceDiff not implemented")
+func (UnimplementedDashboardsServer) GetOhlcvDiff(context.Context, *BasicRequest) (*OhlcvDiffResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOhlcvDiff not implemented")
 }
 func (UnimplementedDashboardsServer) GetOpenInterestDiff(context.Context, *BasicRequest) (*BasicResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetOpenInterestDiff not implemented")
-}
-func (UnimplementedDashboardsServer) GetVolumeUsdDiff(context.Context, *BasicRequest) (*BasicResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetVolumeUsdDiff not implemented")
-}
-func (UnimplementedDashboardsServer) GetVolumeTokenDiff(context.Context, *BasicRequest) (*BasicResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetVolumeTokenDiff not implemented")
 }
 func (UnimplementedDashboardsServer) mustEmbedUnimplementedDashboardsServer() {}
 
@@ -283,20 +255,20 @@ func _Dashboards_GetFunding_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboards_GetPriceCandles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboards_GetOhlcv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BasicRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardsServer).GetPriceCandles(ctx, in)
+		return srv.(DashboardsServer).GetOhlcv(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/public.Dashboards/GetPriceCandles",
+		FullMethod: "/public.Dashboards/GetOhlcv",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardsServer).GetPriceCandles(ctx, req.(*BasicRequest))
+		return srv.(DashboardsServer).GetOhlcv(ctx, req.(*BasicRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -337,20 +309,20 @@ func _Dashboards_GetLiquidations_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dashboards_GetPriceDiff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Dashboards_GetOhlcvDiff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BasicRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DashboardsServer).GetPriceDiff(ctx, in)
+		return srv.(DashboardsServer).GetOhlcvDiff(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/public.Dashboards/GetPriceDiff",
+		FullMethod: "/public.Dashboards/GetOhlcvDiff",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardsServer).GetPriceDiff(ctx, req.(*BasicRequest))
+		return srv.(DashboardsServer).GetOhlcvDiff(ctx, req.(*BasicRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -369,42 +341,6 @@ func _Dashboards_GetOpenInterestDiff_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(DashboardsServer).GetOpenInterestDiff(ctx, req.(*BasicRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Dashboards_GetVolumeUsdDiff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BasicRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DashboardsServer).GetVolumeUsdDiff(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/public.Dashboards/GetVolumeUsdDiff",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardsServer).GetVolumeUsdDiff(ctx, req.(*BasicRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Dashboards_GetVolumeTokenDiff_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BasicRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DashboardsServer).GetVolumeTokenDiff(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/public.Dashboards/GetVolumeTokenDiff",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DashboardsServer).GetVolumeTokenDiff(ctx, req.(*BasicRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -433,8 +369,8 @@ var Dashboards_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Dashboards_GetFunding_Handler,
 		},
 		{
-			MethodName: "GetPriceCandles",
-			Handler:    _Dashboards_GetPriceCandles_Handler,
+			MethodName: "GetOhlcv",
+			Handler:    _Dashboards_GetOhlcv_Handler,
 		},
 		{
 			MethodName: "GetOpenInterest",
@@ -445,20 +381,12 @@ var Dashboards_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Dashboards_GetLiquidations_Handler,
 		},
 		{
-			MethodName: "GetPriceDiff",
-			Handler:    _Dashboards_GetPriceDiff_Handler,
+			MethodName: "GetOhlcvDiff",
+			Handler:    _Dashboards_GetOhlcvDiff_Handler,
 		},
 		{
 			MethodName: "GetOpenInterestDiff",
 			Handler:    _Dashboards_GetOpenInterestDiff_Handler,
-		},
-		{
-			MethodName: "GetVolumeUsdDiff",
-			Handler:    _Dashboards_GetVolumeUsdDiff_Handler,
-		},
-		{
-			MethodName: "GetVolumeTokenDiff",
-			Handler:    _Dashboards_GetVolumeTokenDiff_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

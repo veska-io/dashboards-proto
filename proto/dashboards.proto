@@ -12,14 +12,12 @@ service Dashboards {
 	rpc GetMarkets(BasicRequest) returns (MarketsResponse) {}
 
 	rpc GetFunding(BasicRequest) returns (BasicResponse) {}
-	rpc GetPriceCandles(BasicRequest) returns (BasicResponse) {}
+	rpc GetOhlcv(BasicRequest) returns (OhlcvResponse) {}
 	rpc GetOpenInterest(BasicRequest) returns (BasicResponse) {}
 	rpc GetLiquidations(BasicRequest) returns (BasicResponse) {}
 
-	rpc GetPriceDiff(BasicRequest) returns (BasicResponse) {}
+	rpc GetOhlcvDiff(BasicRequest) returns (OhlcvDiffResponse) {}
 	rpc GetOpenInterestDiff(BasicRequest) returns (BasicResponse) {}
-	rpc GetVolumeUsdDiff(BasicRequest) returns (BasicResponse) {}
-	rpc GetVolumeTokenDiff(BasicRequest) returns (BasicResponse) {}
 }
 
 message BasicRequest {
@@ -28,9 +26,9 @@ message BasicRequest {
 	int64 start = 3;
 	int64 end = 4;
 	int32 window_size = 5;
-	optional string granularity = 6;
+	optional WindowUnit window_unit = 6;
+	optional string granularity = 7;
 }
-
 message BasicResponse {
 	repeated Point points = 1;
 }
@@ -48,4 +46,38 @@ message ExchangesResponse {
 
 message MarketsResponse {
 	repeated string markets = 1;
+}
+
+message OhlcvResponse {
+	repeated Ohlcv points = 1;
+}
+
+message Ohlcv {
+	int64 timestamp = 1;
+	string exchange = 2;
+	string market = 3;
+	double open = 4;
+	double high = 5;
+	double low = 6;
+	double close = 7;
+	double volume_token = 8;
+}
+
+message OhlcvDiffResponse {
+	repeated OhlcvDiff points = 1;
+}
+
+message OhlcvDiff {
+	int64 timestamp = 1;
+	string exchange = 2;
+	string market = 3;
+	double avg = 4;
+	double volume_token = 5;
+}
+
+enum WindowUnit {
+	HOURS = 0;
+	DAYS = 1;
+	WEEKS = 2;
+	MONTHS = 3;
 }
