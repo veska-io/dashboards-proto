@@ -1,4 +1,4 @@
-module github.com/veska-io/proto-dashboards-public
+module github.com/veska-io/dashboards-proto
 
 go 1.22
 
